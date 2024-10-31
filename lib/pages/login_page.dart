@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_app/services/auth_service.dart';
 import 'package:flutter_chat_app/components/my_button.dart';
 import 'package:flutter_chat_app/components/my_input.dart';
 import 'package:flutter_chat_app/pages/register_page.dart';
@@ -8,8 +9,23 @@ class LoginPage extends StatelessWidget {
   final TextEditingController _pwController = TextEditingController();
    LoginPage({super.key});
 
-   void login() {
-    
+   void login(BuildContext context) async {
+    //authservice
+    final authService = AuthService();
+
+    try {
+      await authService.signIn(
+        _emailController.text, 
+        _pwController.text
+        );
+    }
+    catch(e) {
+      showDialog(
+        context: context, 
+        builder: (context)=> AlertDialog(
+          title: Text(e.toString()),
+        ));
+    }
    }
 
   @override
@@ -54,7 +70,7 @@ class LoginPage extends StatelessWidget {
             //login button
             MyButton(
               label: "Login",
-              onTap: login,
+              onTap: () => login(context),
             ),
             const SizedBox(height: 25,),
             //register link
